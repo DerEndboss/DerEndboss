@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f6f1e9"><title>Clawd Coin Run · Der Endboss</title>
+<meta name="description" content="A tiny Clawd runner. Jump, collect coins, beat your best.">
+<link rel="icon" href="assets/icon.png"><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<header><a target="_blank" rel="noopener noreferrer" class="wordmark" href="https://github.com/DerEndboss" aria-label="Back to Der Endboss on GitHub"><img src="assets/icon.png" alt="" width="32" height="32"> <span>DER ENDBOSS <span class="slash">/</span> ARCADE</span></a><a target="_blank" rel="noopener noreferrer" class="back" href="https://github.com/DerEndboss">Back to profile <span>↗</span></a></header>
+<section class="intro"><div><p class="eyebrow"><span class="dot"></span> A LITTLE BREAK FROM EVERYTHING</p><h1>Clawd <em>Coin Run.</em></h1><p class="subtitle">Tiny feet. A pocket full of coins. One more try.</p></div><div class="intro-badge" aria-hidden="true"><span>NO DOWNLOAD</span><span>JUST PLAY <b>↙</b></span></div></section>
+<section class="arcade" aria-label="Clawd Coin Run game">
+<div class="hud"><div><span class="label">SCORE</span><strong id="score">00000</strong></div><div><span class="label">COINS</span><strong class="gold" id="coins">0</strong></div><div><span class="label">PERSONAL BEST</span><strong id="best">00000</strong></div><div class="hud-controls"><button class="icon-button" id="sound" aria-label="Turn sound on" aria-pressed="false" title="Sound">♪<span id="soundState">OFF</span></button><button class="icon-button" id="pause" aria-label="Pause game" title="Pause game">Ⅱ</button></div></div>
+<div class="playfield" id="playfield"><canvas id="game" aria-label="An endless runner. Jump over obstacles and collect coins. Press Space or Arrow Up to jump." tabindex="0"></canvas>
+<div class="overlay" id="overlay"><div class="overlay-inner"><span class="mini-label" id="overlayTag">READY WHEN YOU ARE</span><h2 id="overlayTitle">Let's go, Clawd.</h2><p id="overlayText">One coin arc. One jump. Keep going.</p><button class="primary" id="start">Start a run <span>→</span></button><span class="hint" id="overlayHint">SPACE / ↑ / TAP TO JUMP</span></div></div>
+<div id="milestone" role="status" aria-live="polite"></div>
+</div>
+<div class="game-foot"><span><kbd>SPACE</kbd> <kbd>↑</kbd> jump <span class="desktop-only">· <kbd>P</kbd> pause · <kbd>R</kbd> restart</span></span><button class="jump" id="jump">JUMP <span>↑</span></button><span class="foot-right">Made for one more try. <span class="tiny-clawd">:3</span></span></div>
+</section>
+<footer><span>Your best stays in this browser.</span><button class="text-button" id="resetBest">Reset best</button><span class="footer-end">Take a breath. Then take a leap.</span></footer>
+</main><script type="module" src="game.js"></script>
+</body></html>
