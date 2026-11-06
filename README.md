@@ -1,5 +1,5 @@
 <a href="https://derendboss.github.io/DerEndboss/">
-  <img src="assets/hero-loop.gif" width="1120" alt="Der Endboss. Clawd waves, walks, types, sips coffee and dances. Click to play Coin Run.">
+  <img src="assets/hero.svg" width="1120" alt="Der Endboss. Full-stack dev and game maker, shipping with a crew of Clawds. Click to play Coin Run.">
 </a>
 
 <p align="center">
@@ -11,8 +11,6 @@
 <img src="assets/year.svg" width="1120" alt="Contributions this year, counted from January 1.">
 
 <img src="assets/stats.svg" width="1120" alt="GitHub counters: contributions over the last twelve months, followers, received stars and public repositories.">
-
-<img src="assets/emotes-loop.gif" width="1120" alt="Hello, Typing, Vibing, AFK. Four compact Clawd scenes with centered captions and a spotlight that moves between them.">
 
 <a href="https://derendboss.github.io/DerEndboss/">
   <img src="assets/play-coin-run.gif" width="1120" alt="Play Coin Run. A Clawd runner with jumps, coins, score and a personal best. Works with keyboard and touch.">
