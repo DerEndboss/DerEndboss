@@ -22,11 +22,14 @@ PixelCursor is a one-person studio for apps, games and tools. I decide what gets
   <a href="https://seatsketch.pixel-cursor.com"><img src="assets/apps/seatsketch.svg" width="50%" alt="Seatsketch Studio. Seating plan editor: rooms, tables, guests. Web and desktop."></a><a href="https://www.youtube.com/@PixelCursor"><img src="assets/apps/youtube.svg" width="50%" alt="PixelCursor on YouTube. Algorithms, security and machines, animated and built in code."></a>
 </p>
 
+<img src="assets/stats.svg" width="100%" alt="Stars on public repositories and profile views.">
+
 <a href="https://github.com/DerEndboss?tab=overview">
   <img src="assets/grind.svg" width="100%" alt="The Grind. The contribution calendar of the last twelve months, redrawn every day.">
 </a>
 
 <p align="center">
-  <sub>Every graphic here is plain SVG, drawn by the scripts in this repo. No trackers, no images from elsewhere.<br>
+  <sub>Every graphic here is plain SVG, drawn by the scripts in this repo. Profile views are counted by a small badge service.<br>
   Need a break? <a href="https://derendboss.github.io/DerEndboss/">Play Clawd Coin Run</a>.</sub>
+  <img src="https://visitor-badge.laobi.icu/badge?page_id=DerEndboss.profile.20261020.fresh" width="1" height="1" alt="">
 </p>

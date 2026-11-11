@@ -1,22 +1,30 @@
-"""Refresh assets/grind.svg: the contribution calendar of the last twelve months.
+"""Refresh the data graphics: assets/grind.svg (contribution calendar of the last twelve
+months) and assets/stats.svg (stars and profile views).
 
-Runs daily in GitHub Actions (see .github/workflows/stats.yml). Uses only the
-contribution counts GitHub already shows on the profile. Standard library only.
+Runs daily in GitHub Actions (see .github/workflows/stats.yml). Uses the contribution counts
+GitHub already shows on the profile, the stars of the public repositories and the number of
+the view counter in the README. Standard library only.
 
 Local run:  GH_TOKEN=$(gh auth token) python3 scripts/update_stats.py
 Offline:    PROFILE_STATS_FILE=fixture.json python3 scripts/update_stats.py
 """
 import json
 import os
+import re
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
-from kit import BG, CREAM, DIM, INK, ORANGE, W, Svg, n
+from kit import BG, CREAM, DIM, HOT, INK, ORANGE, ROOT, W, Svg, n
 
 OWNER = os.environ.get('PROFILE_OWNER', 'DerEndboss')
-QUERY = '''query($login:String!) { user(login:$login) { contributionsCollection { contributionCalendar {
+QUERY = '''query($login:String!) { user(login:$login) {
+ repositories(privacy:PUBLIC, ownerAffiliations:OWNER, first:100) { nodes { stargazerCount } }
+ contributionsCollection { contributionCalendar {
  totalContributions weeks { contributionDays { contributionCount date } } } } } }'''
+# the view counter: the README loads this badge once per visit, here we only read its number
+COUNTER = 'https://visitor-badge.laobi.icu/badge?page_id=DerEndboss.profile.20261020.fresh'
+CACHE = ROOT / 'assets/stats.json'
 # magenta (a year ago) -> violet -> periwinkle (today), bright enough to read on black
 DATA = [(0, '#f050f0'), (.3, '#c04df0'), (.55, '#8a5cf6'), (.8, '#7c83ff'), (1, '#aeb4ff')]
 WALK = [(7, 0), (2, 1), (7, 1), (2, 2), (7, 2), (2, 3), (7, 3), (2, 4)]
@@ -30,7 +38,37 @@ def fetch():
         data = json.load(res)
     if data.get('errors'):
         raise RuntimeError(data['errors'])
-    return data['data']['user']['contributionsCollection']['contributionCalendar']
+    return data['data']['user']
+
+
+def views(previous):
+    """Number shown by the view counter; the last known value if the service does not answer."""
+    try:
+        req = urllib.request.Request(COUNTER, headers={'User-Agent': 'profile-stats'})
+        with urllib.request.urlopen(req, timeout=20) as res:
+            found = re.findall(r'>([\d,. ]+)</text>', res.read().decode())
+        return max(previous, int(re.sub(r'\D', '', found[-1])))
+    except Exception as err:  # the profile must not break because a badge service is down
+        print('view counter not reachable:', err)
+        return previous
+
+
+def render_stats(stars, seen):
+    s = Svg(W, 92, f'{stars:,} stars on public repositories, {seen:,} profile views.')
+    s.css.append('.tw{animation:tw 3.2s ease-in-out infinite}@keyframes tw{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.18) rotate(12deg)}}'
+                 '.bl{animation:bl 5s ease-in-out infinite}@keyframes bl{0%,44%,52%,100%{transform:scaleY(1)}48%{transform:scaleY(.08)}}')
+    star = 'M0-11L3.2-3.6 11-3.4 4.9 1.6 7 9.2 0 4.9-7 9.2-4.9 1.6-11-3.4-3.2-3.6Z'
+    icons = [f'<path class="tw" d="{star}" fill="{ORANGE}" stroke="{HOT}" stroke-width="1" stroke-linejoin="round"/>',
+             '<g class="bl"><path d="M-13 0Q0-11 13 0Q0 11-13 0Z" fill="none" stroke="#9d9bff" stroke-width="2" stroke-linejoin="round"/><circle r="3.6" fill="#d2b0ff"/></g>']
+    out = []
+    for i, (value, label) in enumerate([(f'{stars:,}', 'STARS'), (f'{seen:,}', 'PROFILE VIEWS')]):
+        wv, wl = s.width(value, 30), s.width(label, 10.5, 2.4)
+        x = W / 4 + i * W / 2 - (26 + 14 + wv + 16 + wl) / 2
+        out.append(f'<g transform="translate({n(x + 13)} 47)">{icons[i]}</g>' + s.text(value, x + 40, 58, 30, 'x', fill=CREAM)
+                   + s.text(label, x + 40 + wv + 16, 53, 10.5, 'b', fill=DIM, ls=2.4))
+    back = s.glow(0, 92, 330, 120, '#f050f0', .14) + s.glow(W, 0, 330, 120, '#6e6ec8', .18) + s.dots(base=.55) + s.glow(W / 2, 46, 420, 60, BG, .9)
+    s.add(s.card(back + f'<rect x="{W / 2 - .5}" y="24" width="1" height="46" fill="#fff" fill-opacity=".1"/>' + ''.join(out)))
+    s.save('assets/stats.svg')
 
 
 def render(cal):
@@ -83,4 +121,9 @@ def render(cal):
 
 if __name__ == '__main__':
     fixture = os.environ.get('PROFILE_STATS_FILE')
-    render(json.loads(Path(fixture).read_text()) if fixture else fetch())
+    user = json.loads(Path(fixture).read_text()) if fixture else fetch()
+    render(user['contributionsCollection']['contributionCalendar'])
+    known = json.loads(CACHE.read_text()) if CACHE.exists() else {'views': 0}
+    counts = {'stars': sum(r['stargazerCount'] for r in user['repositories']['nodes']), 'views': known['views'] if fixture else views(known['views'])}
+    CACHE.write_text(json.dumps(counts) + '\n')
+    render_stats(counts['stars'], counts['views'])
