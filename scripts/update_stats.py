@@ -1,74 +1,86 @@
-"""Refresh public profile counters and activity. Uses only public GitHub data."""
-import json, os, urllib.request
-from pathlib import Path
+"""Refresh assets/grind.svg: the contribution calendar of the last twelve months.
+
+Runs daily in GitHub Actions (see .github/workflows/stats.yml). Uses only the
+contribution counts GitHub already shows on the profile. Standard library only.
+
+Local run:  GH_TOKEN=$(gh auth token) python3 scripts/update_stats.py
+Offline:    PROFILE_STATS_FILE=fixture.json python3 scripts/update_stats.py
+"""
+import json
+import os
+import urllib.request
 from datetime import datetime, timezone
+from pathlib import Path
 
-ROOT=Path(__file__).resolve().parents[1]
-ASSETS=ROOT/'assets'
-OWNER=os.environ.get('PROFILE_OWNER','DerEndboss')
-QUERY='''query($login:String!,$cursor:String) { user(login:$login) {
- followers { totalCount }
- repositories(privacy:PUBLIC,ownerAffiliations:OWNER,first:100,after:$cursor) {
- totalCount nodes { stargazerCount } pageInfo { hasNextPage endCursor }
- }
- contributionsCollection { contributionCalendar { totalContributions weeks {
- contributionDays { contributionCount date }
- } } }
-} }'''
+from kit import BG, CREAM, DIM, INK, ORANGE, W, Svg, n
+
+OWNER = os.environ.get('PROFILE_OWNER', 'DerEndboss')
+QUERY = '''query($login:String!) { user(login:$login) { contributionsCollection { contributionCalendar {
+ totalContributions weeks { contributionDays { contributionCount date } } } } } }'''
+# magenta (a year ago) -> violet -> periwinkle (today), bright enough to read on black
+DATA = [(0, '#f050f0'), (.3, '#c04df0'), (.55, '#8a5cf6'), (.8, '#7c83ff'), (1, '#aeb4ff')]
+WALK = [(7, 0), (2, 1), (7, 1), (2, 2), (7, 2), (2, 3), (7, 3), (2, 4)]
+
+
 def fetch():
- token=os.environ['GH_TOKEN'];cursor=None;stars=0;first=None
- while True:
-  data=json.dumps({'query':QUERY,'variables':{'login':OWNER,'cursor':cursor}}).encode()
-  req=urllib.request.Request('https://api.github.com/graphql',data=data,headers={'Authorization':'Bearer '+token,'Content-Type':'application/json','User-Agent':'profile-stats'})
-  with urllib.request.urlopen(req,timeout=30) as r: response=json.load(r)
-  if response.get('errors'):raise RuntimeError(response['errors'])
-  user=response['data']['user']
-  if first is None:first=user
-  repos=user['repositories'];stars+=sum(n['stargazerCount'] for n in repos['nodes'])
-  if not repos['pageInfo']['hasNextPage']:break
-  cursor=repos['pageInfo']['endCursor']
- return first,stars
+    body = json.dumps({'query': QUERY, 'variables': {'login': OWNER}}).encode()
+    req = urllib.request.Request('https://api.github.com/graphql', data=body, headers={
+        'Authorization': 'Bearer ' + os.environ['GH_TOKEN'], 'Content-Type': 'application/json', 'User-Agent': 'profile-stats'})
+    with urllib.request.urlopen(req, timeout=30) as res:
+        data = json.load(res)
+    if data.get('errors'):
+        raise RuntimeError(data['errors'])
+    return data['data']['user']['contributionsCollection']['contributionCalendar']
 
-def render(user,stars):
- ASSETS.mkdir(exist_ok=True)
- cal=user['contributionsCollection']['contributionCalendar']
- colors=['#342A27','#674033','#985239','#C96D49','#F19B71']
- metrics=[('LAST 12 MONTHS',cal['totalContributions']),('FOLLOWERS',user['followers']['totalCount']),('STARS',stars),('PUBLIC REPOS',user['repositories']['totalCount'])]
- parts=['<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="150" viewBox="0 0 1120 150" role="img" aria-label="Public GitHub statistics"><rect width="1120" height="150" fill="#1F1C1C"/>']
- for i,(label,value) in enumerate(metrics):
-  x=i*280
-  parts.append(f'<rect x="{x+3}" y="3" width="271" height="144" rx="6" fill="#292323" stroke="#574039"/><rect x="{x+3}" y="3" width="271" height="3" fill="#D97A58"/><text x="{x+140}" text-anchor="middle" y="43" fill="#B59C8D" font-family="monospace" font-size="14" letter-spacing="1">{label}</text><text x="{x+140}" text-anchor="middle" y="112" fill="#F5EDE0" font-family="monospace" font-size="52" font-weight="bold">{value:,}</text>')
- parts.append('</svg>');(ASSETS/'stats.svg').write_text(''.join(parts))
- year=datetime.now(timezone.utc).year
- days=[d for w in cal['weeks'] for d in w['contributionDays'] if d['date'].startswith(str(year))]
- year_total=sum(d['contributionCount'] for d in days)
- year_svg=f'<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="126" viewBox="0 0 1120 126" role="img" aria-label="{year_total:,} contributions this year, {year}"><rect x="3" y="3" width="1114" height="120" rx="7" fill="#292323" stroke="#D97A58"/><text x="560" y="33" text-anchor="middle" fill="#B59C8D" font-family="monospace" font-size="16" letter-spacing="2">CONTRIBUTIONS THIS YEAR</text><text x="560" y="99" text-anchor="middle" fill="#F5EDE0" font-family="monospace" font-size="55" font-weight="bold">{year_total:,}</text><text x="1080" y="34" text-anchor="end" fill="#D97A58" font-family="monospace" font-size="14">{year}</text><rect x="25" y="119" width="60" height="2" fill="#D97A58"><animate attributeName="x" values="25;1035;25" dur="12s" repeatCount="indefinite"/></rect></svg>'
- (ASSETS/'year.svg').write_text(year_svg)
 
- weeks=cal['weeks'];startx=56;step=19;cell=14
- peak=max((d['contributionCount'] for w in weeks for d in w['contributionDays']),default=1)
- def intensity(n):return 0 if not n else min(4,1+int(n/max(1,peak)*3))
- p=['<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="275" viewBox="0 0 1120 275" role="img" aria-label="Contribution calendar for the last year"><rect x="1" y="1" width="1118" height="273" rx="6" fill="#1F1C1C" stroke="#574039"/><text x="30" y="37" font-size="17" font-family="monospace" letter-spacing="2" fill="#F5EDE0">THE GRIND</text><text x="1090" y="37" text-anchor="end" font-family="monospace" font-size="13" fill="#B59C8D">LAST 12 MONTHS</text>']
- month=''
- for w,week in enumerate(weeks):
-  first=week['contributionDays'][0]['date'];m=first[5:7]
-  if m!=month:
-   month=m;p.append(f'<text x="{startx+w*step}" y="67" font-family="monospace" font-size="10" fill="#B59C8D">{datetime.fromisoformat(first).strftime("%b").upper()}</text>')
-  for day in week['contributionDays']:
-   weekday=(datetime.fromisoformat(day['date']).weekday()+1)%7
-   n=day['contributionCount'];x=startx+w*step;y=82+weekday*step
-   p.append(f'<rect x="{x}" y="{y}" width="{cell}" height="{cell}" rx="2" fill="{colors[intensity(n)]}"><title>{day["date"]}: {n} contributions</title></rect>')
- # A little moving orange spark tracks across the calendar; counts stay unchanged.
- p.append(f'<rect x="{startx}" y="228" width="14" height="3" fill="#D97A58"><animate attributeName="x" values="{startx};{startx+(len(weeks)-1)*step};{startx}" dur="12s" repeatCount="indefinite"/></rect>')
- p.append(f'<text x="30" y="257" fill="#D97A58" font-family="monospace" font-size="13">{cal["totalContributions"]:,} CONTRIBUTIONS</text>')
- for i,c in enumerate(colors):p.append(f'<rect x="{970+i*21}" y="244" width="14" height="14" rx="2" fill="{c}"/>')
- p.append('</svg>');(ASSETS/'activity.svg').write_text(''.join(p))
+def render(cal):
+    weeks = cal['weeks'][-53:]
+    year = datetime.now(timezone.utc).year
+    this_year = sum(d['contributionCount'] for w in weeks for d in w['contributionDays'] if d['date'].startswith(str(year)))
+    total = cal['totalContributions']
+    peak = max((d['contributionCount'] for w in weeks for d in w['contributionDays']), default=1) or 1
 
-if __name__=='__main__':
- fixture=os.environ.get('PROFILE_STATS_FILE')
- if fixture:
-  user=json.loads(Path(fixture).read_text())['data']['user']
-  stars=sum(n['stargazerCount'] for n in user['repositories']['nodes'])
- else:user,stars=fetch()
- render(user,stars)
- print('Updated public profile counters and contribution calendar.')
+    s = Svg(W, 252, f'The Grind. {total:,} contributions in the last twelve months, {this_year:,} of them in {year}. A Clawd follows the pixel hand along the calendar.')
+    pitch, top, floor = 14.6, 82, 230
+    left = (W - 52 * pitch) / 2
+    ramp = s.gradient(DATA, left, top + 6 * pitch, left + 52 * pitch, top)
+
+    quiet, loud, months, last = [], [], [], ''
+    for col, week in enumerate(weeks):
+        x = left + col * pitch
+        first = week['contributionDays'][0]['date']
+        if first[5:7] != last:
+            last = first[5:7]
+            if col < len(weeks) - 1:
+                months.append(s.text(datetime.fromisoformat(first).strftime('%b').upper(), x - 4, 62, 9.5, 'b', fill=DIM, ls=1.6))
+        for day in week['contributionDays']:
+            row = (datetime.fromisoformat(day['date']).weekday() + 1) % 7  # Sunday on top, like GitHub
+            count, y = day['contributionCount'], top + row * pitch
+            if count:
+                level = min(4, 1 + int(count / peak * 3.999))
+                loud.append(f'<circle cx="{n(x)}" cy="{n(y)}" r="{[0, 2.7, 3.8, 4.9, 6][level]}"/>')
+            else:
+                quiet.append(f'<circle cx="{n(x)}" cy="{n(y)}" r="1.3"/>')
+
+    # the hand walks the calendar once, the Clawd keeps up, a soft beam lights the weeks they pass
+    span, lap = W + 220, 30
+    s.defs.append('<linearGradient id="beam" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".16"/>'
+                  '<stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>')
+    s.css.append(f'.walk{{animation:walk {lap}s linear -9s infinite}}@keyframes walk{{from{{transform:translateX(-170px)}}to{{transform:translateX({span - 170}px)}}}}'
+                 '.bob{animation:bob 1.2s ease-in-out infinite}@keyframes bob{50%{transform:translateY(-4px)}}')
+    walkers = (f'<g class="walk"><rect x="52" y="{top - 12}" width="76" height="{6 * pitch + 24}" fill="url(#beam)"/>'
+               f'<g transform="translate(-48 {floor - 82})">{s.sprite("walk", WALK, .1)}</g>'
+               f'<g transform="translate(84 {floor - 34})"><g class="bob">{s.hand(30)}</g></g></g>')
+
+    head = (s.text('THE GRIND', 28, 38, 13, 'x', fill=INK, ls=3)
+            + s.text(f'{this_year:,} IN {year}', W - 28, 38, 10.5, 'b', fill=DIM, anchor='end', ls=1.8)
+            + s.text(f'{total:,}', 162, 38, 13, 'x', fill=CREAM) + s.text('CONTRIBUTIONS · LAST 12 MONTHS', 162 + s.width(f'{total:,}', 13) + 10, 38, 10.5, 'b', fill=DIM, ls=1.8))
+    back = (s.glow(0, 252, 400, 200, '#f050f0', .16) + s.glow(W, 0, 400, 200, '#6e6ec8', .18) + s.glow(W / 2, 262, 430, 70, ORANGE, .12))
+    line = f'<line x1="24" y1="{floor + 1}" x2="{W - 24}" y2="{floor + 1}" stroke="#2b2b3b" stroke-width="2" stroke-dasharray="10 10"/>'
+    s.add(s.card(back + head + ''.join(months) + f'<g fill="#fff" fill-opacity=".14">{"".join(quiet)}</g><g fill="url(#{ramp})">{"".join(loud)}</g>' + line + walkers))
+    s.save('assets/grind.svg')
+
+
+if __name__ == '__main__':
+    fixture = os.environ.get('PROFILE_STATS_FILE')
+    render(json.loads(Path(fixture).read_text()) if fixture else fetch())

@@ -1,51 +1,32 @@
-<a href="https://derendboss.github.io/DerEndboss/">
-  <img src="assets/hero.svg" width="1120" alt="Der Endboss. Full-stack dev and game maker, shipping with a crew of Clawds. Click to play Coin Run.">
+<a href="https://pixel-cursor.com">
+  <img src="assets/hero.svg" width="100%" alt="PixelCursor. Apps, games and tools, shipped with a crew of seven Clawds: build, ship, coffee, vibe, hello, focus, rest.">
 </a>
 
 <p align="center">
-  <a href="https://github.com/DerEndboss?tab=repositories"><img src="assets/repositories.svg" width="280" alt="Browse repositories"></a>
-  &nbsp;
-  <a href="https://github.com/DerEndboss?tab=stars"><img src="assets/favorites.svg" width="280" alt="Browse stars"></a>
+  <a href="https://pixel-cursor.com">pixel-cursor.com</a>
+  &nbsp;·&nbsp;
+  <a href="https://www.youtube.com/@PixelCursor">YouTube</a>
+  &nbsp;·&nbsp;
+  <a href="https://www.tiktok.com/@pixelcursor">TikTok</a>
+  &nbsp;·&nbsp;
+  <a href="https://patreon.com/PixelCursor">Patreon</a>
 </p>
 
-<img src="assets/year.svg" width="1120" alt="Contributions this year, counted from January 1.">
+PixelCursor is a one-person studio for apps, games and tools. I decide what gets built and how it should feel. A crew of Claude agents writes most of the code. Everything on this page is live.
 
-<img src="assets/stats.svg" width="1120" alt="GitHub counters: contributions over the last twelve months, followers, received stars and public repositories.">
+<img src="assets/session.svg" width="100%" alt="A Claude session, looping through three apps that were built this way: a prompt, a plan, the build, the checks and a live address.">
 
-<a href="https://derendboss.github.io/DerEndboss/">
-  <img src="assets/play-coin-run.gif" width="1120" alt="Play Coin Run. A Clawd runner with jumps, coins, score and a personal best. Works with keyboard and touch.">
-</a>
-
-<p align="center">
-  <a href="https://derendboss.github.io/DerEndboss/">Play Coin Run ↗</a>
-  &nbsp; · &nbsp;
-  <a href="https://github.com/DerEndboss?tab=followers">The crew</a>
+<p>
+  <a href="https://workstation.pixel-cursor.com"><img src="assets/apps/workstation.svg" width="50%" alt="Workstation. 22 tools in one place: algorithm visualizers, math, crypto, games."></a><a href="https://relentchess.pixel-cursor.com"><img src="assets/apps/relentchess.svg" width="50%" alt="RelentChess. Stockfish in your browser: analysis, game review, puzzles."></a>
+  <a href="https://drinkbro.pixel-cursor.com"><img src="assets/apps/drinkbro.svg" width="50%" alt="DrinkBro. Hydration tracker with water that moves. Web and Android."></a><a href="https://iagree.pixel-cursor.com"><img src="assets/apps/iagree.svg" width="50%" alt="I Have Read and Agree. A game about the fine print. 20 forms, 20 dark patterns."></a>
+  <a href="https://seatsketch.pixel-cursor.com"><img src="assets/apps/seatsketch.svg" width="50%" alt="Seatsketch Studio. Seating plan editor: rooms, tables, guests. Web and desktop."></a><a href="https://www.youtube.com/@PixelCursor"><img src="assets/apps/youtube.svg" width="50%" alt="PixelCursor on YouTube. Algorithms, security and machines, animated and built in code."></a>
 </p>
-
-<details>
-<summary>Game controls</summary>
-
-| Input | Action |
-| :--- | :--- |
-| Space, ↑ or W | Jump |
-| Tap the game or JUMP | Jump on touch screens |
-| P | Pause or resume |
-| R | Start a fresh run |
-| ♪ | Toggle sound |
-
-Each coin arc fits one jump. Collect all four for bonus points. Your best is saved in your browser. No account needed.
-
-</details>
 
 <a href="https://github.com/DerEndboss?tab=overview">
-  <img src="assets/activity.svg" width="1120" alt="The Grind. Explore the real contribution calendar for the last twelve months.">
+  <img src="assets/grind.svg" width="100%" alt="The Grind. The contribution calendar of the last twelve months, redrawn every day.">
 </a>
 
 <p align="center">
-  <img src="https://visitor-badge.laobi.icu/badge?page_id=DerEndboss.profile.20261020.fresh&amp;left_color=%23292323&amp;right_color=%23d97a58" width="280" alt="Profile views since this counter was added">
+  <sub>Every graphic here is plain SVG, drawn by the scripts in this repo. No trackers, no images from elsewhere.<br>
+  Need a break? <a href="https://derendboss.github.io/DerEndboss/">Play Clawd Coin Run</a>.</sub>
 </p>
-
-
-<a href="https://derendboss.github.io/DerEndboss/">
-  <img src="assets/trail.gif" width="1120" alt="Clawd strolls across the profile collecting golden pixels. Your turn? Click to play.">
-</a>
