@@ -19,7 +19,7 @@ PixelCursor is a one-person studio for apps, games and tools. I decide what gets
 <p>
   <a href="https://workstation.pixel-cursor.com"><img src="assets/apps/workstation.svg" width="50%" alt="Workstation. 22 tools in one place: algorithm visualizers, math, crypto, games."></a><a href="https://relentchess.pixel-cursor.com"><img src="assets/apps/relentchess.svg" width="50%" alt="RelentChess. Stockfish in your browser: analysis, game review, puzzles."></a>
   <a href="https://drinkbro.pixel-cursor.com"><img src="assets/apps/drinkbro.svg" width="50%" alt="DrinkBro. Hydration tracker with water that moves. Web and Android."></a><a href="https://iagree.pixel-cursor.com"><img src="assets/apps/iagree.svg" width="50%" alt="I Have Read and Agree. A game about the fine print. 20 forms, 20 dark patterns."></a>
-  <a href="https://seatsketch.pixel-cursor.com"><img src="assets/apps/seatsketch.svg" width="50%" alt="Seatsketch Studio. Seating plan editor: rooms, tables, guests. Web and desktop."></a><a href="https://www.youtube.com/@PixelCursor"><img src="assets/apps/youtube.svg" width="50%" alt="PixelCursor on YouTube. Algorithms, security and machines, animated and built in code."></a>
+  <a href="https://seatsketch.pixel-cursor.com"><img src="assets/apps/seatsketch.svg" width="50%" alt="Seatsketch Studio. Seating plan editor: rooms, tables, guests. Web and desktop."></a><a href="https://www.youtube.com/@PixelCursor"><img src="assets/apps/youtube.svg" width="50%" alt="PixelCursor on YouTube. Simulating things nobody asked for: wild questions, run in real code."></a>
 </p>
 
 <img src="assets/stats.svg" width="100%" alt="Stars on public repositories and profile views.">

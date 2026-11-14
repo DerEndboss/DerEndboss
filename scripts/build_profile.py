@@ -306,7 +306,7 @@ TILES = [
     ('drinkbro', 'DrinkBro', ['Hydration tracker with water', 'that moves. Web and Android.'], 'drinkbro.pixel-cursor.com', m_water),
     ('iagree', 'I Have Read and Agree', ['A game about the fine print.', '20 forms, 20 dark patterns.'], 'iagree.pixel-cursor.com', m_agree),
     ('seatsketch', 'Seatsketch Studio', ['Seating plan editor: rooms,', 'tables, guests. Web and desktop.'], 'seatsketch.pixel-cursor.com', m_seats),
-    ('youtube', 'PixelCursor on YouTube', ['Algorithms, security and machines,', 'animated and built in code.'], 'youtube.com/@PixelCursor', m_graph),
+    ('youtube', 'PixelCursor on YouTube', ['Simulating things nobody asked for:', 'wild questions, run in real code.'], 'youtube.com/@PixelCursor', m_graph),
 ]
 
 
