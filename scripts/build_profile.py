@@ -301,7 +301,7 @@ def m_graph(s):
 
 
 TILES = [
-    ('workstation', 'Workstation', ['22 tools in one place: algorithm', 'visualizers, math, crypto, games.'], 'workstation.pixel-cursor.com', m_sort),
+    ('workstation', 'Workstation', ['25 tools in one place: algorithm', 'visualizers, math, crypto, games.'], 'workstation.pixel-cursor.com', m_sort),
     ('relentchess', 'RelentChess', ['Stockfish in your browser:', 'analysis, game review, puzzles.'], 'relentchess.pixel-cursor.com', m_chess),
     ('drinkbro', 'DrinkBro', ['Hydration tracker with water', 'that moves. Web and Android.'], 'drinkbro.pixel-cursor.com', m_water),
     ('iagree', 'I Have Read and Agree', ['A game about the fine print.', '20 forms, 20 dark patterns.'], 'iagree.pixel-cursor.com', m_agree),
