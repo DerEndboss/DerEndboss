@@ -33,3 +33,5 @@ PixelCursor is a one-person studio for apps, games and tools. I decide what gets
   Need a break? <a href="https://derendboss.github.io/DerEndboss/">Play Clawd Coin Run</a>.</sub>
   <img src="https://visitor-badge.laobi.icu/badge?page_id=DerEndboss.profile.20261020.fresh" width="1" height="1" alt="">
 </p>
+
+<p align="center"><sub>Scripts and page code are MIT licensed, see <a href="LICENSE">LICENSE</a>. Logos and app artwork are covered by <a href="ASSETS.md">ASSETS.md</a>.</sub></p>
