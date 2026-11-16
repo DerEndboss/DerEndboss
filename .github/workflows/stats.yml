@@ -4,13 +4,15 @@ on:
   schedule:
     - cron: '17 5 * * *'
 permissions:
-  contents: write
+  contents: read
 concurrency:
   group: profile-stats
   cancel-in-progress: false
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write   # only this job pushes the redrawn artwork
     steps:
       - uses: actions/checkout@v4
       - name: Redraw the contribution calendar and the counters
